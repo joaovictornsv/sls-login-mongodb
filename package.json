@@ -1,0 +1,32 @@
+{
+  "name": "sls-login-mongodb",
+  "version": "1.0.0",
+  "description": "Azure Functions webpack sample for the Serverless framework using Typescript",
+  "scripts": {
+    "dev": "sls offline --noPrependStageInUrl",
+    "refresh": "rm -rf node_modules yarn.lock; npm install"
+  },
+  "keywords": [
+    "azure",
+    "serverless"
+  ],
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.3"
+  },
+  "devDependencies": {
+    "@azure/functions": "^1.0.3",
+    "@types/jsonwebtoken": "^8.5.4",
+    "@types/node": "^13.1.8",
+    "fork-ts-checker-webpack-plugin": "^3.0.1",
+    "serverless-azure-functions": "^2.0.0",
+    "serverless-offline": "^7.0.0",
+    "serverless-webpack": "^5.3.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
