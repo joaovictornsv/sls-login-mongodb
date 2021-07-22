@@ -1,11 +1,11 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import User from '../models/User';
 import '../database';
-import { verifyJWT } from '../utils/generate-token';
+import { AuthRoute } from '../utils/auth';
 
 export const handler: AzureFunction = async function (context: Context, req: HttpRequest) {
   try {
-    await verifyJWT(req);
+    await AuthRoute(req);
     const users = await User.find();
 
     return context.res = {

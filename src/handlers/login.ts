@@ -1,16 +1,16 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import '../database';
-import { generateJWT } from '../utils/generate-token';
+import { AuthLogin } from '../utils/auth';
 
 export const handler: AzureFunction = async function (context: Context, req: HttpRequest) {
   try {
-    const token = await generateJWT(req);
+    const { token, refreshToken } = await AuthLogin(req);
     return context.res = {
       status: 200,
       headers: {
         'Content-type': 'application-json',
       },
-      body: { token: token },
+      body: { token, refreshToken },
     };
 
   } catch(err) {

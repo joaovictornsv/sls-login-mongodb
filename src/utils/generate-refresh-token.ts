@@ -1,67 +1,26 @@
-import * as jwt from 'jsonwebtoken';
-import { HttpRequest } from '@azure/functions';
-import User from '../models/User';
-import { SECRET } from '../constants/env';
-import { decrypt } from './decrypt';
+import RefreshToken from '../models/RefreshToken';
+import * as dayjs from 'dayjs';
 
 // Custom JWT authentication middleware
-async function verifyRefreshToken(req: HttpRequest) {
-  if (req.body) {
-    const { token } = req.body;
+async function refreshTokenIsValid(refreshTokenId: string) {
+  const refreshToken = await RefreshToken.findOne({ id: refreshTokenId });
 
-    if (!token) {
-      throw new Error('No token provided');
-    }
-
-    return jwt.verify(token, SECRET, async (err: any, decoded: any) => {
-      if (err) {
-        throw new Error(err);
-      }
-
-      const id = decoded.id;
-
-      const user = await User.findById(id);
-
-      if (!user) {
-        throw new Error('User not exists');
-      }
-
-      return { id };
-    });
+  if (refreshToken) {
+    return true;
   }
- throw new Error('No headers provided');
+
+  return false
+
 }
 
-async function generateRefreshToken(req: HttpRequest) {
-  if (req.headers) {
-    const token = req.headers.authorization;
+async function generateRefreshToken(userId: string) {
+  const expiresIn = dayjs().add(20, 'seconds').unix()
 
-    if (token) {
-      return token;
-    }
+  const newRefreshToken = await RefreshToken.create({ expiresIn, userId })
 
-    const { username } = req.body;
+  return newRefreshToken
 
-    const user = await User.findOne({ username });
-
-    if (!user) {
-      throw new Error('User not exists');
-    }
-
-    const decryptedPassword = decrypt(Buffer.from(user.password,"base64"));
-    const passwordIsValid = req.body.password === decryptedPassword
-
-    if (!passwordIsValid) {
-      throw new Error('Failed to login, invalid password');
-    }
-
-    const { id } = user;
-
-    const newToken = jwt.sign({ id }, SECRET, { expiresIn: '20s' });
-
-    return newToken;
-  }
-  throw new Error('No headers provided');
 }
 
-export { verifyRefreshToken, generateRefreshToken };
+
+export { refreshTokenIsValid, generateRefreshToken };
