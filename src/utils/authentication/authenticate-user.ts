@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { HttpRequest, HttpRequestHeaders } from '@azure/functions';
+import { HttpRequest } from '@azure/functions';
 import User from '../../models/User';
 import { SECRET } from '../../constants/env';
 import { Cryptography } from '../cryptography/cryptography';
@@ -9,9 +9,9 @@ import RefreshToken from '../../models/RefreshToken';
 
 // Custom JWT authentication middleware
 class AuthenticateUser {
-  async AuthRoute(headers: HttpRequestHeaders) {
-    if (headers) {
-      const token = headers.authorization;
+  async AuthRoute(req: HttpRequest) {
+    if (req) {
+      const token = req.headers.authorization;
 
       if (!token) {
         throw new Error('No token provided');
@@ -30,7 +30,7 @@ class AuthenticateUser {
           throw new Error('User not exists');
         }
 
-        return { id };
+        req.body = { user, id };
       });
     }
     throw new Error('No headers provided');

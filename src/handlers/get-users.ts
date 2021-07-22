@@ -6,11 +6,11 @@ import { response } from '../utils/response/context-response';
 
 async function getUsers(context: Context, req: HttpRequest) {
   const authenticateUser = new AuthenticateUser();
-  await authenticateUser.AuthRoute(req.headers);
+  await authenticateUser.AuthRoute(req);
 
   const users = await User.find();
 
-  return context.res = response(200, users);
+  return context.res = response(200, { message: `Hello ${req.body.user.username}!`, data: users });
 }
 
 export const handler:
