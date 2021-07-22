@@ -1,5 +1,5 @@
-import RefreshToken from '../models/RefreshToken';
 import * as dayjs from 'dayjs';
+import RefreshToken from '../models/RefreshToken';
 
 // Custom JWT authentication middleware
 async function refreshTokenIsValid(refreshTokenId: string) {
@@ -9,18 +9,15 @@ async function refreshTokenIsValid(refreshTokenId: string) {
     return true;
   }
 
-  return false
-
+  return false;
 }
 
 async function generateRefreshToken(userId: string) {
-  const expiresIn = dayjs().add(20, 'seconds').unix()
+  const expiresIn = dayjs().add(20, 'seconds').unix();
 
-  const newRefreshToken = await RefreshToken.create({ expiresIn, userId })
+  const newRefreshToken = await RefreshToken.create({ expiresIn, userId });
 
-  return newRefreshToken
-
+  return newRefreshToken;
 }
-
 
 export { refreshTokenIsValid, generateRefreshToken };

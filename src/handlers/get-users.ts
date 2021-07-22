@@ -3,7 +3,7 @@ import User from '../models/User';
 import '../database';
 import { AuthRoute } from '../utils/auth';
 
-export const handler: AzureFunction = async function (context: Context, req: HttpRequest) {
+export const handler: AzureFunction = async (context: Context, req: HttpRequest) => {
   try {
     await AuthRoute(req);
     const users = await User.find();
@@ -13,9 +13,8 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
         'Content-type': 'application-json',
       },
       body: users,
-    }
-
-  } catch(err) {
+    };
+  } catch (err) {
     return context.res = {
       status: 400,
       headers: {
@@ -24,5 +23,4 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
       body: { message: err.message },
     };
   }
-  
-}
+};

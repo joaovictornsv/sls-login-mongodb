@@ -1,3 +1,3 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
-export const { DATABASE_URL, SECRET } = process.env
+export const { DATABASE_URL, SECRET } = process.env;

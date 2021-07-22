@@ -2,7 +2,7 @@ import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import '../database';
 import { AuthLogin } from '../utils/auth';
 
-export const handler: AzureFunction = async function (context: Context, req: HttpRequest) {
+export const handler: AzureFunction = async (context: Context, req: HttpRequest) => {
   try {
     const { token, refreshToken } = await AuthLogin(req);
     return context.res = {
@@ -12,8 +12,7 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
       },
       body: { token, refreshToken },
     };
-
-  } catch(err) {
+  } catch (err) {
     return context.res = {
       status: 400,
       headers: {
@@ -22,4 +21,4 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
       body: { message: err.message },
     };
   }
-}
+};

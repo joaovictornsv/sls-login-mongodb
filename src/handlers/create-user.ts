@@ -1,12 +1,12 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import User from '../models/User';
-import '../database'
 import { encrypt } from '../utils/encrypt';
+import '../database';
 
-export const handler: AzureFunction = async function (context: Context, req: HttpRequest) {
+export const handler: AzureFunction = async (context: Context, req: HttpRequest) => {
   const userData = req.body;
 
-  if ( !userData || !userData.username || !userData.password) {
+  if (!userData || !userData.username || !userData.password) {
     return context.res = {
       status: 400,
       headers: {
@@ -16,7 +16,7 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
     };
   }
 
-  const userAlreadyExists = await User.findOne({ username: userData.username })
+  const userAlreadyExists = await User.findOne({ username: userData.username });
 
   if (userAlreadyExists) {
     return context.res = {
@@ -34,7 +34,6 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
 
   const user = await User.create(userData);
 
-
   return context.res = {
     status: 201,
     headers: {
@@ -42,4 +41,4 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
     },
     body: user,
   };
-}
+};

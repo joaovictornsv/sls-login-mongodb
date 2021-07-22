@@ -4,7 +4,7 @@
   "description": "Azure Functions webpack sample for the Serverless framework using Typescript",
   "scripts": {
     "dev": "sls offline --noPrependStageInUrl",
-    "refresh": "rm -rf node_modules yarn.lock; npm install"
+    "refresh": "rm -rf node_modules package-lock.lock; yarn install"
   },
   "keywords": [
     "azure",
@@ -21,6 +21,12 @@
     "@azure/functions": "^1.0.3",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/node": "^13.1.8",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
+    "eslint": "^7.31.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.23.4",
     "fork-ts-checker-webpack-plugin": "^3.0.1",
     "serverless-azure-functions": "^2.0.0",
     "serverless-offline": "^7.0.0",

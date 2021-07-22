@@ -5,7 +5,7 @@ import RefreshToken from '../models/RefreshToken';
 import { generateRefreshToken } from '../utils/generate-refresh-token';
 import { generateToken } from '../utils/generate-token';
 
-export const handler: AzureFunction = async function (context: Context, req: HttpRequest) {
+export const handler: AzureFunction = async (context: Context, req: HttpRequest) => {
   try {
     const { refresh_token } = req.body;
     if (!refresh_token) {
@@ -17,7 +17,7 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
     if (!refreshToken) {
       throw new Error('Refresh Token invalid');
     }
-    
+
     const token = generateToken(refreshToken.userId);
     if (dayjs().isAfter(dayjs.unix(refreshToken.expiresIn))) {
       await RefreshToken.deleteMany({ userId: refreshToken.userId });
@@ -40,8 +40,7 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
       },
       body: { token },
     };
-
-  } catch(err) {
+  } catch (err) {
     return context.res = {
       status: 400,
       headers: {
@@ -50,4 +49,4 @@ export const handler: AzureFunction = async function (context: Context, req: Htt
       body: { message: err.message },
     };
   }
-}
+};

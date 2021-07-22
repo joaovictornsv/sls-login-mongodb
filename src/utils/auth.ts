@@ -21,10 +21,9 @@ async function AuthRoute(req: HttpRequest) {
         throw new Error(err);
       }
 
-      const id = decoded.id;
+      const { id } = decoded;
 
       console.log(id);
-      
 
       const user = await User.findById(id);
 
@@ -35,7 +34,7 @@ async function AuthRoute(req: HttpRequest) {
       return { id };
     });
   }
- throw new Error('No headers provided');
+  throw new Error('No headers provided');
 }
 
 async function AuthLogin(req: HttpRequest) {
@@ -47,8 +46,8 @@ async function AuthLogin(req: HttpRequest) {
     throw new Error('User not exists');
   }
 
-  const decryptedPassword = decrypt(Buffer.from(user.password,"base64"));
-  const passwordIsValid = req.body.password === decryptedPassword
+  const decryptedPassword = decrypt(Buffer.from(user.password, 'base64'));
+  const passwordIsValid = req.body.password === decryptedPassword;
 
   if (!passwordIsValid) {
     throw new Error('Failed to login, invalid password');
@@ -61,7 +60,6 @@ async function AuthLogin(req: HttpRequest) {
   await RefreshToken.deleteMany({ userId: id });
 
   const refreshToken = await generateRefreshToken(id);
-
 
   return { token, refreshToken };
 }
