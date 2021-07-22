@@ -1,26 +1,24 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import User from '../models/User';
-import '../database';
-import { AuthRoute } from '../utils/auth';
+import { connectToDatabase } from '../database';
+import { AuthenticateUser } from '../utils/authentication/authenticate-user';
+import { response } from '../utils/response/context-response';
 
-export const handler: AzureFunction = async (context: Context, req: HttpRequest) => {
-  try {
-    await AuthRoute(req);
-    const users = await User.find();
+async function getUsers(context: Context, req: HttpRequest) {
+  const authenticateUser = new AuthenticateUser();
+  await authenticateUser.AuthRoute(req.headers);
 
-    return context.res = {
-      headers: {
-        'Content-type': 'application-json',
-      },
-      body: users,
-    };
-  } catch (err) {
-    return context.res = {
-      status: 400,
-      headers: {
-        'Content-type': 'application-json',
-      },
-      body: { message: err.message },
-    };
-  }
-};
+  const users = await User.find();
+
+  return context.res = response(200, users);
+}
+
+export const handler:
+AzureFunction = async (
+  context: Context,
+  req: HttpRequest,
+) => connectToDatabase()
+  .then(async () => {
+    await getUsers(context, req);
+  })
+  .catch((err) => context.res = response(400, { message: err.message }));
