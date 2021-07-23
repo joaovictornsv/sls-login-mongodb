@@ -1,4 +1,5 @@
 import RefreshToken from '../../models/RefreshToken';
+import User from '../../models/User';
 import { TokenServices } from './generate-token';
 
 class RefreshTokenServices {
@@ -16,6 +17,8 @@ class RefreshTokenServices {
     const token = tokenServices.generate(userId);
 
     const newRefreshToken = await RefreshToken.create({ token, userId });
+
+    await User.updateOne({ _id: userId }, { $set: { refresh_token: newRefreshToken.id } });
 
     return newRefreshToken;
   }

@@ -2,7 +2,6 @@ import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { connectToDatabase } from '../database';
 import RefreshToken from '../models/RefreshToken';
 import { response } from '../utils/response/context-response';
-import { RefreshTokenServices } from '../utils/tokens/generate-refresh-token';
 import { TokenServices } from '../utils/tokens/generate-token';
 
 async function getRefreshToken(context: Context, req: HttpRequest) {
@@ -23,15 +22,8 @@ async function getRefreshToken(context: Context, req: HttpRequest) {
   const refreshTokenIs = { valid: null };
   tokenServices.isValid(refreshToken.token, refreshTokenIs);
 
-  console.log(refreshTokenIs);
-
   if (!refreshTokenIs.valid) {
-    await RefreshToken.deleteMany({ userId: refreshToken.userId });
-
-    const refreshTokenServices = new RefreshTokenServices();
-    const newRefreshToken = await refreshTokenServices.generate(refreshToken.userId);
-
-    return context.res = response(200, { token: newToken, newRefreshToken });
+    throw new Error('Refresh Token expired! Please login again.');
   }
 
   return context.res = response(200, { token: newToken });
