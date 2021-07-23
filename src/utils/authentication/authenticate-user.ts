@@ -6,12 +6,11 @@ import { RefreshTokenServices } from '../tokens/generate-refresh-token';
 import { TokenServices } from '../tokens/generate-token';
 import RefreshToken from '../../models/RefreshToken';
 import { PUBLIC_KEY } from '../../constants/keys';
-import Session from '../../models/Session';
 
 // Custom JWT authentication middleware
 class AuthenticateUser {
   async AuthRoute(req: HttpRequest) {
-    if (req) {
+    if (req.headers) {
       const token = req.headers.authorization;
 
       if (!token) {
@@ -31,9 +30,6 @@ class AuthenticateUser {
           throw new Error('User not exists');
         }
 
-        await Session.updateOne(
-          { refresh_token: user.refresh_token }, { $inc: { count_access_get_users: 1 } },
-        );
         req.body = { user };
       });
     }

@@ -14,7 +14,7 @@ class RefreshTokenServices {
 
   async generate(userId: string) {
     const tokenServices = new TokenServices();
-    const token = tokenServices.generate(userId);
+    const token = tokenServices.generate(userId, '60s');
 
     const newRefreshToken = await RefreshToken.create({ token, userId });
 
