@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 const RefreshToken = new mongoose.Schema({
-  expiresIn: { type: Number, required: true },
+  token: { type: String, required: true },
   userId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
 },
 {

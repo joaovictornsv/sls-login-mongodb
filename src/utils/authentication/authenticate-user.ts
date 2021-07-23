@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { HttpRequest } from '@azure/functions';
 import User from '../../models/User';
-import { SECRET } from '../../constants/env';
 import { Cryptography } from '../cryptography/cryptography';
 import { RefreshTokenServices } from '../tokens/generate-refresh-token';
 import { TokenServices } from '../tokens/generate-token';
 import RefreshToken from '../../models/RefreshToken';
+import { PUBLIC_KEY } from '../../constants/keys';
 
 // Custom JWT authentication middleware
 class AuthenticateUser {
@@ -17,7 +17,7 @@ class AuthenticateUser {
         throw new Error('No token provided');
       }
 
-      return jwt.verify(token, SECRET, async (err: any, decoded: any) => {
+      return jwt.verify(token, PUBLIC_KEY, { algorithms: ['RS256'] }, async (err: any, decoded: any) => {
         if (err) {
           throw new Error(err);
         }
@@ -30,7 +30,7 @@ class AuthenticateUser {
           throw new Error('User not exists');
         }
 
-        req.body = { user, id };
+        req.body = { user };
       });
     }
     throw new Error('No headers provided');

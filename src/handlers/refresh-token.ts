@@ -1,5 +1,4 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
-import dayjs from 'dayjs';
 import { connectToDatabase } from '../database';
 import RefreshToken from '../models/RefreshToken';
 import { response } from '../utils/response/context-response';
@@ -12,27 +11,30 @@ async function getRefreshToken(context: Context, req: HttpRequest) {
     throw new Error('Refresh Token not provided');
   }
 
-  const refreshToken = await RefreshToken.findById(refresh_token);
+  const refreshToken = await RefreshToken.findOne({ token: refresh_token });
 
   if (!refreshToken) {
     throw new Error('Refresh Token invalid');
   }
 
   const tokenServices = new TokenServices();
-  const token = tokenServices.generate(refreshToken.userId);
+  const newToken = tokenServices.generate(refreshToken.userId);
 
-  const refreshTokenExpired = dayjs().isAfter(dayjs.unix(refreshToken.expiresIn));
+  const refreshTokenIs = { valid: null };
+  tokenServices.isValid(refreshToken.token, refreshTokenIs);
 
-  if (refreshTokenExpired) {
+  console.log(refreshTokenIs);
+
+  if (!refreshTokenIs.valid) {
     await RefreshToken.deleteMany({ userId: refreshToken.userId });
 
     const refreshTokenServices = new RefreshTokenServices();
     const newRefreshToken = await refreshTokenServices.generate(refreshToken.userId);
 
-    return context.res = response(200, { token, newRefreshToken });
+    return context.res = response(200, { token: newToken, newRefreshToken });
   }
 
-  return context.res = response(200, { token });
+  return context.res = response(200, { token: newToken });
 }
 
 export const handler:

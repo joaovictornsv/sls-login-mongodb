@@ -1,10 +1,9 @@
-import dayjs from 'dayjs';
 import RefreshToken from '../../models/RefreshToken';
+import { TokenServices } from './generate-token';
 
 class RefreshTokenServices {
   async isValid(refreshTokenId: string) {
     const refreshToken = await RefreshToken.findOne({ id: refreshTokenId });
-
     if (refreshToken) {
       return true;
     }
@@ -13,9 +12,10 @@ class RefreshTokenServices {
   }
 
   async generate(userId: string) {
-    const expiresIn = dayjs().add(20, 'seconds').unix();
+    const tokenServices = new TokenServices();
+    const token = tokenServices.generate(userId);
 
-    const newRefreshToken = await RefreshToken.create({ expiresIn, userId });
+    const newRefreshToken = await RefreshToken.create({ token, userId });
 
     return newRefreshToken;
   }
