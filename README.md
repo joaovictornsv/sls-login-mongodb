@@ -1,6 +1,6 @@
 <div align="center">
 
-  <h1><img src="https://image.flaticon.com/icons/png/512/3039/3039423.png" height=130 /><br/>Register/Login App</h1>
+  <h1><img src="https://cdn-icons-png.flaticon.com/512/3408/3408516.png" height=130 /><br/>Register/Login App</h1>
     
 <h1>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-plain.svg" height=50 /> &nbsp;
